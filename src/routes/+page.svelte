@@ -1,40 +1,18 @@
 <script>
 	import { onMount } from 'svelte';
+	export let data;
 
 	let currentEmotion = '';
 	let guessInput = '';
-
-	const emotions = [
-		'happy',
-		'sad',
-		'angry',
-		'surprised',
-		'disgusted',
-		'fearful',
-		'confused',
-		'excited',
-		'bored',
-		'loved'
-	];
-
-	const emojiMap = {
-		happy: ['😀', '😃', '😄', '😁', '😆'],
-		sad: ['😔', '😞', '😢', '😓', '😿'],
-		angry: ['😠', '😡', '😤', '😣', '😖'],
-		surprised: ['😮', '😯', '😲', '😳', '😱'],
-		disgusted: ['😷', '😵', '🤢', '🤮', '🤧'],
-		fearful: ['😨', '😰', '😱', '😥', '😓'],
-		confused: ['😕', '😖', '😐', '🤔', '😵'],
-		excited: ['😍', '🤩', '😊', '😁', '🥳'],
-		bored: ['😐', '😑', '😪', '🥱', '😒'],
-		loved: ['😘', '😍', '😻', '😚', '😙']
-	};
+	let emojiMap = {};
 
 	function resetGame() {
-		currentEmotion = emotions[Math.floor(Math.random() * emotions.length)];
+		currentEmotion =
+			Object.keys(emojiMap)[Math.floor(Math.random() * Object.keys(emojiMap).length)];
 		guessInput = '';
 	}
 
+	// TODO: Add db call for writing guess
 	function checkGuess() {
 		const guess = guessInput.trim().toLowerCase();
 		if (guess === currentEmotion) {
@@ -45,7 +23,10 @@
 		}
 	}
 
-	onMount(resetGame);
+	onMount(async () => {
+		emojiMap = data?.emojiMap;
+		resetGame();
+	});
 </script>
 
 <div
@@ -56,18 +37,12 @@
 			<h1 class="text-4xl font-bold mb-6 text-indigo-600">
 				🙃 EmojiGrid: The Emotion Guessing Game 😄
 			</h1>
-			<div class="grid grid-cols-5 gap-6 mb-8 text-5xl">
-				{#each Array(25) as _, i}
-					<span
-						class="cursor-pointer transition duration-300 ease-in-out transform hover:scale-125"
-					>
-						{#if emojiMap[currentEmotion]}
-							{emojiMap[currentEmotion][
-								Math.floor(Math.random() * emojiMap[currentEmotion].length)
-							]}
-						{/if}
-					</span>
-				{/each}
+			<div class="gap-6 mb-8 text-5xl">
+				<span class="cursor-pointer transition duration-300 ease-in-out transform hover:scale-125">
+					{#if emojiMap[currentEmotion]}
+						{emojiMap[currentEmotion][Math.floor(Math.random() * emojiMap[currentEmotion].length)]}
+					{/if}
+				</span>
 			</div>
 			<input
 				type="text"
