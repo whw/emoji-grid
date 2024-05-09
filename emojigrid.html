@@ -1,0 +1,172 @@
+<html><head><base href="https://websim.ai/" target="_blank">
+<title>🙃 EmojiGrid: The Emotion Guessing Game 😄</title>
+<style>
+  body {
+    font-family: sans-serif;
+    text-align: center;
+    background-color: #f0f0f0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  .game-container {
+    padding: 40px;
+    background-color: white;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  .emoji-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 10px;
+    font-size: 3em;
+    margin-bottom: 20px;
+  }
+
+  .emoji-grid span {
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+
+  .emoji-grid span:hover {
+    transform: scale(1.2);
+  }
+
+  h1 {
+    color: #ff6b6b;
+    text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.5);
+    margin-bottom: 10px;
+  }
+
+  input {
+    padding: 10px;
+    font-size: 1em;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  button {
+    background-color: #ff6b6b;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1em;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.2s;
+  }
+
+  button:hover {
+    background-color: #ff4f4f;
+  }
+</style>
+</head>
+<body>
+  <div class="game-container">
+    <h1>🙃 EmojiGrid: The Emotion Guessing Game 😄</h1>
+    <div class="emoji-grid" id="emojiGrid"></div>
+    <input type="text" id="guessInput" placeholder="Enter your guess...">
+    <button id="guessButton">Guess</button>
+  </div>
+
+  <script>
+    const emotions = [
+      "happy",
+      "sad",
+      "angry",
+      "surprised",
+      "disgusted",
+      "fearful",
+      "confused",
+      "excited",
+      "bored",
+      "loved"
+    ];
+    const emojiMap = {
+      "happy": ["😀", "😃", "😄", "😁", "😆"],
+      "sad": ["😔", "😞", "😢", "😓", "😿"],
+      "angry": ["😠", "😡", "😤", "😣", "😖"],
+      "surprised": ["😮", "😯", "😲", "😳", "😱"],
+      "disgusted": ["😷", "😵", "🤢", "🤮", "🤧"],
+      "fearful": ["😨", "😰", "😱", "😥", "😓"],
+      "confused": ["😕", "😖", "😐", "🤔", "😵"],
+      "excited": ["😍", "🤩", "😊", "😁", "🥳"],
+      "bored": ["😐", "😑", "😪", "🥱", "😒"],
+      "loved": ["😘", "😍", "😻", "😚", "😙"]
+    };
+
+    const emojiGrid = document.getElementById("emojiGrid");
+    const guessInput = document.getElementById("guessInput");
+    const guessButton = document.getElementById("guessButton");
+
+    let currentEmotion = "";
+
+    function resetGame() {
+      currentEmotion = emotions[Math.floor(Math.random() * emotions.length)];
+      emojiGrid.innerHTML = "";
+
+      const emojis = emojiMap[currentEmotion];
+      for (let i = 0; i < 25; i++) {
+        const emojiSpan = document.createElement("span");
+        emojiSpan.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        emojiGrid.appendChild(emojiSpan);
+      }
+
+      guessInput.value = "";
+      guessInput.focus();
+    }
+
+    function checkGuess() {
+      const guess = guessInput.value.trim().toLowerCase();
+      if (guess === currentEmotion) {
+        alert("Correct! You guessed the emotion!");
+        resetGame();
+      } else {
+        alert("Sorry, that's not correct. Try again!");
+      }
+    }
+
+    guessButton.addEventListener("click", checkGuess);
+    guessInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        checkGuess();
+      }
+    });
+
+    resetGame();
+  </script>
+</body>
+</html>
+
+This is a simple web-based game called "EmojiGrid: The Emotion Guessing Game" where the user has to guess the emotion represented by a grid of emojis. Here's how it works:
+
+1. The game starts by randomly selecting an emotion from a list of emotions and displaying a grid of 25 random emojis representing that emotion.
+2. The user has to enter their guess for the emotion in the text input field and click the "Guess" button or press Enter.
+3. If the user guessed correctly, an alert is shown with a "Correct!" message, and the game resets with a new emotion and a new grid of emojis.
+4. If the user guessed incorrectly, an alert is shown with a "Sorry, that's not correct. Try again!" message, allowing the user to try again.
+
+The game uses HTML, CSS, and JavaScript. The CSS provides a simple but engaging design with a pulse animation on the game container. The JavaScript code handles the game logic, including randomly selecting an emotion, populating the emoji grid, checking the user's guess, and resetting the game.
+
+The `emojiMap` object maps emotions to arrays of corresponding emojis, allowing for easy customization and expansion of the game with more emotions and emojis.
+
+This game can be a fun and engaging way to test one's ability to recognize and interpret emotions through emojis, while also providing a visually appealing and interactive experience.
