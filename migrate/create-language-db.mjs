@@ -13,7 +13,7 @@ const { Pool } = pkg;
 
 // Load environment variables from .env.local
 import * as dotenv from 'dotenv';
-dotenv.config({ path: '.env.local' });
+dotenv.config({ path: '../.env.local' });
 
 // PostgreSQL connection configuration
 const dbConfig = {
@@ -37,6 +37,8 @@ const createTable = `
   )
 `;
 
+let rowCount = 0;
+
 pool.query(createTable, (err, res) => {
 	if (err) {
 		console.error('Error creating table:', err);
@@ -45,24 +47,31 @@ pool.query(createTable, (err, res) => {
 	console.log('Table created successfully');
 
 	// Read data from the CSV file and insert it into the table
+	const rows = [];
 	fs.createReadStream('language-definition.csv')
 		.pipe(csv(['emoji_grid', 'concept']))
-		.on('data', async (row) => {
+		.on('data', (row) => {
 			const { emoji_grid, concept } = row;
+			rowCount = rowCount + 1;
+			rows.push([concept, emoji_grid]);
+		})
+		.on('end', async () => {
 			const insertQuery = `
         INSERT INTO language (concept, emoji_grid)
         VALUES ($1, $2)
       `;
 			try {
 				const client = await pool.connect();
-				await client.query(insertQuery, [concept, emoji_grid]);
+				for (const row of rows) {
+					await client.query(insertQuery, row);
+				}
 				client.release();
+				console.log('Data insertion completed');
+				pool.end();
 			} catch (err) {
-				console.error('Error inserting row:', err);
+				console.error('Error inserting rows:', err);
 			}
-		})
-		.on('end', () => {
-			console.log('Data insertion completed');
-			pool.end();
 		});
 });
+
+console.log('rowCount', rowCount);

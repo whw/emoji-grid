@@ -1,5 +1,11 @@
 #!/usr/bin/env node
 
+/*
+ * This script expects a language-definition.csv file in the same directory
+ *
+ * Rows in the csv file should be emoji_grid,concept
+ */
+
 import pkg from 'pg';
 const { Pool } = pkg;
 
@@ -20,21 +26,17 @@ const dbConfig = {
 // Create a new PostgreSQL client
 const pool = new Pool(dbConfig);
 
-// Create the table
-const createTable = `
-  CREATE TABLE IF NOT EXISTS Guess (
-    id SERIAL PRIMARY KEY,
-    concept_id INTEGER REFERENCES language(id),
-    concept VARCHAR(1023),
-    emoji_grid VARCHAR(1023),
-    guess VARCHAR(1023)
-  )
+// Drop the language table
+const dropTable = `
+  DROP TABLE IF EXISTS guess;
+  DROP TABLE IF EXISTS language;
 `;
 
-pool.query(createTable, (err, res) => {
+pool.query(dropTable, (err, res) => {
 	if (err) {
-		console.error('Error creating table:', err);
+		console.error('Error dropping table:', err);
 		return;
 	}
-	console.log('Table created successfully');
+	console.log('Table dropped successfully');
+	pool.end();
 });
