@@ -1,6 +1,6 @@
+import { POSTGRES_URL } from '$env/static/private';
 import { json } from '@sveltejs/kit';
 import { createPool } from '@vercel/postgres';
-import { POSTGRES_URL } from '$env/static/private';
 
 export async function load() {
 	const db = createPool({
