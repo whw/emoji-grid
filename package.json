@@ -30,6 +30,7 @@
 	"dependencies": {
 		"csv-parser": "^3.0.0",
 		"dotenv": "^16.4.5",
-		"pg": "^8.11.5"
+		"pg": "^8.11.5",
+		"@vercel/postgres": "^0.8.0"
 	}
 }
